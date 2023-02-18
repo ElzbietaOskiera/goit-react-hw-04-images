@@ -1,39 +1,24 @@
 import PropTypes from 'prop-types';
-import { Component } from 'react';
+import { useState } from 'react';
 import { Item, Image } from './ImageGalleryItem.styled';
 
 import { Modal } from 'components/Modal/Modal';
 
-export class ImageGalleryItem extends Component {
-  state = {
-    showModal: false,
-  };
+export const ImageGalleryItem = ({ largeImageURL, webformatURL, tags }) => {
+  const [showModal, setShowModal] = useState(false);
 
-  openModal = () => {
-    this.setState({
-      showModal: true,
-    });
-  };
-
-  handleKeyDown = event => {
+  const handleKeyDown = event => {
     if (event.code === 'Escape') {
-      this.setState({
-        showModal: false,
-      });
+      setShowModal(false);
     }
   };
 
-  handleBackdropClick = event => {
+  const handleBackdropClick = event => {
     if (event.target === event.currentTarget) {
-      this.setState({
-        showModal: false,
-      });
+      setShowModal(false)
     }
   };
 
-  render() {
-    const { showModal } = this.state;
-    const { largeImageURL, webformatURL, tags } = this.props;
     return (
       <div>
         <Item>
@@ -41,20 +26,22 @@ export class ImageGalleryItem extends Component {
             src={webformatURL}
             alt={tags}
             loading="lazy"
-            onClick={this.openModal}
+            onClick={() => {
+            setShowModal(true);
+          }}
           />
         </Item>
         {showModal && (
           <Modal
             largeImageURL={largeImageURL}
-            onClose={this.handleBackdropClick}
-            onChange={this.handleKeyDown}
+            onClose={handleBackdropClick}
+            onChange={handleKeyDown}
           />
         )}
       </div>
     );
   }
-}
+
 
 ImageGalleryItem.propTypes = {
   largeImageURL: PropTypes.string.isRequired,

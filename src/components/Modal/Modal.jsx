@@ -1,18 +1,16 @@
 import PropTypes from 'prop-types';
-import { Component } from 'react';
+import { useEffect } from 'react';
 import { Overlay, ModalWindow } from './Modal.styled';
 
-export class Modal extends Component {
-  componentDidMount() {
-    window.addEventListener('keydown', this.props.onChange);
-  }
+export const Modal = ({ onChange, onClose, largeImageURL}) => {
+  useEffect(() => {
+    window.addEventListener('keydown', onChange);
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.props.onChange);
-  }
+    return () => {
+      window.removeEventListener('keydown', onChange);
+    };
+  }, [onChange]);
 
-  render() {
-    const { onClose, largeImageURL } = this.props;
     return (
       <Overlay onClick={onClose}>
         <ModalWindow>
@@ -21,7 +19,7 @@ export class Modal extends Component {
       </Overlay>
     );
   }
-}
+
 
 Modal.propTypes = {
   onChange: PropTypes.func.isRequired,

@@ -1,40 +1,34 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { RxMagnifyingGlass } from 'react-icons/rx';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Searchbar, SearchForm, Button, Input } from './SearchBar.styled';
 
-export class SearchBar extends Component {
-  state = {
-    value: '',
+export const SearchBar = ({ onSubmit, isSubmitting }) => {
+  const [value, setValue] = useState('');
+
+  const handelInputChange = event => {
+      setValue(event.currentTarget.value.toLowerCase())
   };
 
-  handelInputChange = event => {
-    this.setState({
-      value: event.currentTarget.value.toLowerCase(),
-    });
-  };
-
-  handleFormSubmit = event => {
+  const handleFormSubmit = event => {
     event.preventDefault();
-    if (this.state.value.trim() === '') {
+    if (value.trim() === '') {
       return toast.error('Please, enter the request!');
     }
-    this.props.onSubmit(this.state.value.trim());
+    onSubmit(value.trim());
   };
 
-  render() {
-    const { value } = this.state;
     return (
       <Searchbar>
-        <SearchForm onSubmit={this.handleFormSubmit}>
-          <Button type="submit" disabled={this.props.isSubmitting}>
+        <SearchForm onSubmit={handleFormSubmit}>
+          <Button type="submit" disabled={isSubmitting}>
             <RxMagnifyingGlass />
           </Button>
           <Input
             type="text"
-            onChange={this.handelInputChange}
+            onChange={handelInputChange}
             value={value}
             autoComplete="off"
             autoFocus
@@ -44,7 +38,6 @@ export class SearchBar extends Component {
       </Searchbar>
     );
   }
-}
 
 SearchBar.propTypes = {
   onSubmit: PropTypes.func.isRequired,
